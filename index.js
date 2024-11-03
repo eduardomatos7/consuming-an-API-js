@@ -1,6 +1,5 @@
-function getTransictions(transictionsData){
+function getTransictions(transactionsData){
     const contentTransactions = document.createElement('div')
-    contentTransactions.id = transictionsData.id
     contentTransactions.classList.add('contentTransactions')
 
     const spaceHistoric = document.createElement('div')
@@ -8,13 +7,13 @@ function getTransictions(transictionsData){
 
     const nameTrasaction = document.createElement('p')
     nameTrasaction.classList.add('nameTrasaction')
-    nameTrasaction.textContent = transictionsData.name
+    nameTrasaction.textContent = transactionsData.name
 
     spaceHistoric.appendChild(nameTrasaction)
 
     const valueTransaction = document.createElement('p')
     valueTransaction.classList.add('valueTransaction')
-    valueTransaction.textContent = transictionsData.valor
+    valueTransaction.textContent = transactionsData.value
 
     const divButtons = document.createElement('div')
     divButtons.classList.add('buttons')
@@ -35,16 +34,45 @@ function getTransictions(transictionsData){
 
 }
 const form = document.querySelector('#form')
-document.addEventListener('DOMContentLoaded', ()=>{
-    fechResponse()
+form.addEventListener('submit', async (ev)=>{
+    ev.preventDefault();
+    const transactionsData = {
+        name: document.querySelector('#name').value,
+        value: document.querySelector('#value').value
+    }
+    try {
+        const response = await fetch('http://localhost:3000/transactions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(transactionsData)
+    
+        })
+        const savedTransactions = await response.json();
+        form.reset();
+        getTransictions(savedTransactions);
+    } catch (error) {
+        console.log("Erro ao enviar transação", error)
+    }
+    
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchTransaction()    
     
 })
 
 
-async function fechResponse() {
-    const response = await fetch("http://localhost:3000/transactions").then(res => res.json())
-    response.forEach(getTransictions)
-    console.log(response)
+async function fetchTransaction() {
+    try {
+        const response = await fetch("http://localhost:3000/transactions")
+        const data = await response.json()
+        data.forEach(getTransictions)
+    } catch (error) {
+        console.log(error)
+    }
+    
     
     
 }
