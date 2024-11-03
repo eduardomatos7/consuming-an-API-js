@@ -1,6 +1,8 @@
 function getTransictions(transactionsData){
     const contentTransactions = document.createElement('div')
+    contentTransactions.id = transactionsData.id
     contentTransactions.classList.add('contentTransactions')
+    console.log(contentTransactions)
 
     const spaceHistoric = document.createElement('div')
     spaceHistoric.classList.add('spaceHistoric')
@@ -25,7 +27,10 @@ function getTransictions(transactionsData){
     const buttonDel = document.createElement('button')
     buttonDel.type = "button"
     buttonDel.textContent = "Excluir"
+    buttonDel.id = transactionsData.id + "-buttonDelete"
     buttonDel.classList.add('button', 'exc')
+
+    addDeleteButtonListener(buttonDel, contentTransactions, transactionsData.id)
 
     divButtons.append(buttonEdit, buttonDel)
     contentTransactions.append(spaceHistoric, valueTransaction, divButtons)
@@ -33,6 +38,26 @@ function getTransictions(transactionsData){
 
 
 }
+
+function addDeleteButtonListener(buttonDel, contentTransactions, transactionId){
+    buttonDel.addEventListener('click', async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/transactions/${transactionId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                document.querySelector('#transactions').removeChild(contentTransactions)
+            } else {
+                console.log('Erro ao deletar a transação')
+            }
+        } catch (error) {
+            console.log("Erro ao deletar transação", error)
+        }
+    });
+}
+
+
 const form = document.querySelector('#form')
 form.addEventListener('submit', async (ev)=>{
     ev.preventDefault();
