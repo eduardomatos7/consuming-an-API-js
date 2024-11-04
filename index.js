@@ -210,6 +210,4 @@ async function fetchTransaction() {
         console.log(error)
     }
     
-    
-    
 }

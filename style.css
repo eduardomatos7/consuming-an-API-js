@@ -1,13 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wdth,wght@75,500&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root{
+    --background-color: black;
+    --background-font: rgb(58,53,59);
+    --background-btn-green: rgb(112 255 163);
+    --color-blue: rgb(65, 179, 249);
+    --color-red: red;
+}
+
 *{
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 body{
-    background-color: black;
+    background-color: var(--background-color);
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
 .section{
-    background-color: black;
+    background-color: var(--background-color);
     display: flex;
     flex-direction: row;
     gap: 20px;
@@ -30,7 +44,7 @@ body{
 
 .background, h2, h3{
     padding: .5rem;
-    background-color: rgb(58,53,59);
+    background-color: var(--background-font);
     border-radius: 5px;
     width: 100%;
     padding-left: 1.5rem;
@@ -53,7 +67,7 @@ body{
     cursor: pointer;
     border-radius: 5px;
     border: none;
-    background-color: rgb(112 255 163);
+    background-color: var(--background-btn-green);
     width: 100%;
 }
 #transactions{
@@ -69,12 +83,14 @@ body{
     gap: 10px;
     width: 100%;
     align-items: center;
+    border-bottom: 1px solid var(--background-font);
+    padding-bottom: 1rem;
 }
 .spaceHistoric{
     width: 10rem;
 }
 .edit{
-    background-color: rgb(65, 179, 249);
+    background-color: var(--color-blue);
 }
 .buttons{
     display: flex;
@@ -87,13 +103,22 @@ body{
     border-radius: 5px;
 }
 .exc{
-    background-color: red;
+    background-color: var(--color-red);
 }
 hr{
     width: 100%;
-    border: 1px solid  rgb(58,53,59);
+    border: 1px solid  var(--background-font);
 }
 .buttonEditColor{
-    background-color: rgb(112 255 163);
+    background-color: var(--background-btn-green);
 }
 
+.credit-color{
+    color: var(--background-btn-green);
+}
+.debit-color{
+    color: var(--color-red);
+}
+.valueTransaction{
+    font-weight: 700;
+}
