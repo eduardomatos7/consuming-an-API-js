@@ -15,7 +15,7 @@ function getTransictions(transactionsData){
 
     const valueTransaction = document.createElement('p')
     valueTransaction.classList.add('valueTransaction')
-    valueTransaction.textContent = transactionsData.value
+    valueTransaction.textContent = `R$ ${transactionsData.value},00`
 
     const divButtons = document.createElement('div')
     divButtons.classList.add('buttons')
@@ -84,6 +84,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
         }
 
         buttonEdit.textContent = 'Salvar'
+        buttonEdit.classList.add('buttonEditColor')
 
         buttonEdit.onclick = async () => {
             transactionsData.name = inputName.value
@@ -110,6 +111,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
                     inputName.replaceWith(updatedName)
                     inputValue.replaceWith(updatedValue)
                     buttonEdit.textContent = 'Editar'
+                    buttonEdit.classList.remove('buttonEditColor')
 
                     buttonEdit.onclick = null;
                     addEditButtonListener(buttonEdit, contentTransactions, transactionsData)
