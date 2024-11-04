@@ -44,9 +44,25 @@ function createTransactionTitle(title){
 function createTransactionAmount(amount){
     const valueTransaction = document.createElement('p')
     valueTransaction.classList.add('valueTransaction')
-    valueTransaction.textContent = amount
+    const formater = Intl.NumberFormat('pt-BR', {
+        compactDisplay: 'long',
+        currency: 'BRL',
+        style: 'currency',
+      })
+    const formatedAmount = formater.format(amount)
+    if (amount > 0){
+        valueTransaction.textContent = `${formatedAmount} C`
+        valueTransaction.classList.add('credit-color')
+    }else if(amount === 0){
+        valueTransaction.textContent = formatedAmount
+        
+    }else{
+        valueTransaction.textContent = `${formatedAmount} D`
+        valueTransaction.classList.add('debit-color')
+    }
     return valueTransaction
 }
+
 
 function createClassDivBtn(){
     const divButtons = document.createElement('div')
@@ -69,6 +85,7 @@ function createDeleteBtn(id){
     buttonDel.classList.add('button', 'exc')
     return buttonDel
 }
+
 
 
 
@@ -117,7 +134,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
         buttonEdit.textContent = 'Salvar'
         buttonEdit.classList.add('buttonEditColor')
 
-        buttonEdit.onclick = async () => {
+        buttonEdit.addEventListener('click', async () => {
             transactionsData.name = inputName.value
             transactionsData.value = parseFloat(inputValue.value)
 
@@ -131,13 +148,9 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
                 })
 
                 if (response.ok) {
-                    const updatedName = document.createElement('p')
-                    updatedName.classList.add('nameTransaction')
-                    updatedName.textContent = transactionsData.name
+                    const updatedName = createTransactionTitle(transactionsData.name)
 
-                    const updatedValue = document.createElement('p')
-                    updatedValue.classList.add('valueTransaction')
-                    updatedValue.textContent = Number(transactionsData.value)
+                    const updatedValue = createTransactionAmount(transactionsData.value)
 
                     inputName.replaceWith(updatedName)
                     inputValue.replaceWith(updatedValue)
@@ -152,7 +165,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
             } catch (error) {
                 console.log('Erro ao enviar atualização', error)
             }
-        }
+        })
     })
 }
 
