@@ -1,44 +1,76 @@
-function getTransictions(transactionsData){
-    const contentTransactions = document.createElement('div')
-    contentTransactions.id = transactionsData.id
-    contentTransactions.classList.add('contentTransactions')
-    console.log(contentTransactions)
+function renderTransactions(transactionsData){
+    const content = CreateContent(transactionsData.id)
+    const historic = divOrganizer()
+    const valueTransaction = createTransactionAmount(transactionsData.value)
+    const nameTrasaction = createTransactionTitle(transactionsData.name)
+    const buttonEdit = createEditBtn()
+    const buttonDel = createDeleteBtn(transactionsData)
+    const divButtons = createClassDivBtn()
+    
+    addEditButtonListener(buttonEdit, content, transactionsData)
+    addDeleteButtonListener(buttonDel, content, transactionsData.id)
 
+    historic.appendChild(nameTrasaction)
+    divButtons.append(buttonEdit, buttonDel)
+    historic.append(nameTrasaction)
+    content.append(historic, valueTransaction, divButtons)
+    document.querySelector('#transactions').appendChild(content)
+
+}
+
+ function CreateContent(transactionsDataId){
+    const contentTransactions = document.createElement('div')
+    contentTransactions.id = transactionsDataId
+    contentTransactions.classList.add('contentTransactions')
+    return contentTransactions
+}
+
+function divOrganizer(){
     const spaceHistoric = document.createElement('div')
     spaceHistoric.classList.add('spaceHistoric')
+    return spaceHistoric
+}
 
+function createTransactionTitle(title){
     const nameTrasaction = document.createElement('p')
     nameTrasaction.classList.add('nameTransaction')
-    nameTrasaction.textContent = transactionsData.name
+    nameTrasaction.textContent = title
+    return nameTrasaction
+}
 
-    spaceHistoric.appendChild(nameTrasaction)
 
+
+
+function createTransactionAmount(amount){
     const valueTransaction = document.createElement('p')
     valueTransaction.classList.add('valueTransaction')
-    valueTransaction.textContent = `R$ ${transactionsData.value},00`
+    valueTransaction.textContent = amount
+    return valueTransaction
+}
 
+function createClassDivBtn(){
     const divButtons = document.createElement('div')
     divButtons.classList.add('buttons')
+    return divButtons
+}
 
+function createEditBtn(){
     const buttonEdit = document.createElement('button')
     buttonEdit.type = "button"
     buttonEdit.textContent = 'Editar'
     buttonEdit.classList.add('button', 'edit')
+    return buttonEdit
+}
+function createDeleteBtn(id){
     const buttonDel = document.createElement('button')
     buttonDel.type = "button"
     buttonDel.textContent = "Excluir"
-    buttonDel.id = transactionsData.id + "-buttonDelete"
+    buttonDel.id = id + "-buttonDelete"
     buttonDel.classList.add('button', 'exc')
-    
-    addEditButtonListener(buttonEdit, contentTransactions, transactionsData)
-    addDeleteButtonListener(buttonDel, contentTransactions, transactionsData.id)
-
-    divButtons.append(buttonEdit, buttonDel)
-    contentTransactions.append(spaceHistoric, valueTransaction, divButtons)
-    document.querySelector('#transactions').appendChild(contentTransactions)
-
-
+    return buttonDel
 }
+
+
 
 function addDeleteButtonListener(buttonDel, contentTransactions, transactionId){
     buttonDel.addEventListener('click', async () => {
@@ -79,7 +111,6 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
             valueTransaction.replaceWith(inputValue)
         }
          else {
-            console.error("Elementos nameTransaction ou valueTransaction não encontrados.")
             return
         }
 
@@ -88,7 +119,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
 
         buttonEdit.onclick = async () => {
             transactionsData.name = inputName.value
-            transactionsData.value = inputValue.value
+            transactionsData.value = parseFloat(inputValue.value)
 
             try {
                 const response = await fetch(`http://localhost:3000/transactions/${transactionsData.id}`, {
@@ -106,7 +137,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
 
                     const updatedValue = document.createElement('p')
                     updatedValue.classList.add('valueTransaction')
-                    updatedValue.textContent = transactionsData.value
+                    updatedValue.textContent = Number(transactionsData.value)
 
                     inputName.replaceWith(updatedName)
                     inputValue.replaceWith(updatedValue)
@@ -131,7 +162,7 @@ form.addEventListener('submit', async (ev)=>{
     ev.preventDefault();
     const transactionsData = {
         name: document.querySelector('#name').value,
-        value: document.querySelector('#value').value
+        value: parseFloat(document.querySelector('#value').value)
     }
     try {
         const response = await fetch('http://localhost:3000/transactions', {
@@ -144,7 +175,7 @@ form.addEventListener('submit', async (ev)=>{
         })
         const savedTransactions = await response.json();
         form.reset();
-        getTransictions(savedTransactions);
+        renderTransactions(savedTransactions);
     } catch (error) {
         console.log("Erro ao enviar transação", error)
     }
@@ -161,7 +192,7 @@ async function fetchTransaction() {
     try {
         const response = await fetch("http://localhost:3000/transactions")
         const data = await response.json()
-        data.forEach(getTransictions)
+        data.forEach(renderTransactions)
     } catch (error) {
         console.log(error)
     }
