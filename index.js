@@ -1,3 +1,5 @@
+let transactions = []
+
 function renderTransactions(transactionsData){
     const content = CreateContent(transactionsData.id)
     const historic = divOrganizer()
@@ -86,7 +88,23 @@ function createDeleteBtn(id){
     return buttonDel
 }
 
-
+function updateBalance(){
+    const balanceSpan = document.querySelector("#spanAmount")
+    const balance = transactions.reduce((sum, transaction) => sum + transaction.value, 0)
+    const formater = Intl.NumberFormat('pt-BR', {
+        compactDisplay: 'long',
+        currency: 'BRL',
+        style: 'currency',
+    })
+    balanceSpan.textContent = formater.format(balance)
+    if (balance >= 0){
+        balanceSpan.classList.remove("debit-color")
+        balanceSpan.classList.add("credit-color")
+    }else{
+        balanceSpan.classList.remove("credit-color")
+        balanceSpan.classList.add("debit-color")
+    }
+}
 
 
 function addDeleteButtonListener(buttonDel, contentTransactions, transactionId){
@@ -94,17 +112,19 @@ function addDeleteButtonListener(buttonDel, contentTransactions, transactionId){
         try {
             const response = await fetch(`http://localhost:3000/transactions/${transactionId}`, {
                 method: 'DELETE'
-            });
+            })
 
             if (response.ok) {
                 document.querySelector('#transactions').removeChild(contentTransactions)
+                transactions = transactions.filter(t => t.id !== transactionId)
+                updateBalance()
             } else {
                 console.log('Erro ao deletar a transação')
             }
         } catch (error) {
             console.log("Erro ao deletar transação", error)
         }
-    });
+    })
 }
 
 
@@ -113,10 +133,12 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
         const inputName = document.createElement('input')
         inputName.type = 'text'
         inputName.value = transactionsData.name
+        inputName.name = "edit-input"
         inputName.classList.add('editInput')
 
         const inputValue = document.createElement('input')
-        inputValue.type = 'text'
+        inputValue.type = 'number'
+        inputValue.name = "edit-input"
         inputValue.value = transactionsData.value
         inputValue.classList.add('editInput')
 
@@ -149,15 +171,14 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
 
                 if (response.ok) {
                     const updatedName = createTransactionTitle(transactionsData.name)
-
                     const updatedValue = createTransactionAmount(transactionsData.value)
 
                     inputName.replaceWith(updatedName)
                     inputValue.replaceWith(updatedValue)
                     buttonEdit.textContent = 'Editar'
                     buttonEdit.classList.remove('buttonEditColor')
-
-                    buttonEdit.onclick = null;
+                    updateBalance()
+                    buttonEdit.onclick = null
                     addEditButtonListener(buttonEdit, contentTransactions, transactionsData)
                 } else {
                     console.log('Erro ao atualizar a transação')
@@ -172,7 +193,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
 
 const form = document.querySelector('#form')
 form.addEventListener('submit', async (ev)=>{
-    ev.preventDefault();
+    ev.preventDefault()
     const transactionsData = {
         name: document.querySelector('#name').value,
         value: parseFloat(document.querySelector('#value').value)
@@ -186,9 +207,11 @@ form.addEventListener('submit', async (ev)=>{
             body: JSON.stringify(transactionsData)
     
         })
-        const savedTransactions = await response.json();
-        form.reset();
-        renderTransactions(savedTransactions);
+        const savedTransactions = await response.json()
+        form.reset()
+        renderTransactions(savedTransactions)
+        transactions.push(savedTransactions)
+        updateBalance()
     } catch (error) {
         console.log("Erro ao enviar transação", error)
     }
@@ -204,8 +227,9 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchTransaction() {
     try {
         const response = await fetch("http://localhost:3000/transactions")
-        const data = await response.json()
-        data.forEach(renderTransactions)
+        transactions = await response.json()
+        transactions.forEach(renderTransactions)
+        updateBalance()
     } catch (error) {
         console.log(error)
     }
