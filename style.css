@@ -36,11 +36,12 @@ body{
     padding-left: 1.5rem;
 }
 
-.name, .valor{
+.name, .value, .editInput{
     padding: .5rem;
     border: none;
     border-radius: 5px;
 }
+
 .divInput{
     display: flex;
     flex-direction: column;
@@ -92,3 +93,7 @@ hr{
     width: 100%;
     border: 1px solid  rgb(58,53,59);
 }
+.buttonEditColor{
+    background-color: rgb(112 255 163);
+}
+
