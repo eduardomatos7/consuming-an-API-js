@@ -81,6 +81,12 @@ h1{
     border: none;
     background-color: var(--background-btn-green);
     width: 100%;
+    transition: .2s ease-in-out;
+
+}
+.submit:hover{
+    filter: brightness(70%);
+    transition: filter .2s ease-in-out;
 }
 #transactions{
     display: flex;
@@ -113,6 +119,11 @@ h1{
     cursor: pointer;
     border: none;
     border-radius: 5px;
+    transition: filter .2s ease-in-out;
+}
+.button:hover{
+    filter: brightness(70%);
+    transition: filter .2s ease-in-out;
 }
 .exc{
     background-color: var(--color-red);
