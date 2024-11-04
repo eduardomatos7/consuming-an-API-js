@@ -130,11 +130,11 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
          else {
             return
         }
-
+        
         buttonEdit.textContent = 'Salvar'
         buttonEdit.classList.add('buttonEditColor')
 
-        buttonEdit.addEventListener('click', async () => {
+        buttonEdit.onclick =  async () => {
             transactionsData.name = inputName.value
             transactionsData.value = parseFloat(inputValue.value)
 
@@ -165,7 +165,7 @@ function addEditButtonListener(buttonEdit, contentTransactions, transactionsData
             } catch (error) {
                 console.log('Erro ao enviar atualização', error)
             }
-        })
+        }
     })
 }
 
