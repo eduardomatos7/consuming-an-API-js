@@ -32,6 +32,6 @@ Este projeto é uma aplicação simples de gerenciamento de transações finance
 3. abra o arquivo index.html no navegador
 
 
-##Melhorias futuras:
+## Melhorias futuras:
 
 Adicionar função de escolha no input para crédito ou débito.
