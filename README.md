@@ -34,5 +34,6 @@ Este projeto é uma aplicação simples de gerenciamento de transações finance
 
 ## Melhorias futuras:
 
--Adicionar função de escolha no input para crédito ou débito.
--Criar responsividade e deixar mais dinâmico.
+- Adicionar função de escolha no input para crédito ou débito.
+
+- Criar responsividade e deixar mais dinâmico.
